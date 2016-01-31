@@ -4,6 +4,7 @@
 % git push origin master
 
 \documentclass[a4paper,11pt]{article}
+\usepackage{soul}
 \begin{document}
 \title{Microsoft SQL Server Developer Interview Questions}
 \author{postgresql2016(at)gmail.com}
@@ -11,8 +12,10 @@
 \maketitle
 The following interview questoins are all from the REAL interviews(including both telephone and on-site interviews). Hope this document is helpful during your job hunting process. Enjoy!
 \section{MS SQL Server and T-SQL}
-Q: \underline{If the SQL performance is bad, tell me how you can fix it?} \newline
+Q: \ul{If the SQL performance is bad, tell me how you can fix it?} \newline
 A: This is a typical and difficult question. Usually the SQL in the production database meets some performance trouble. The quickest way is to check the statistics of the related tables(You can find the table list from the SQL code), and update the statistics very quickly. If the statistics are updated, in most case, MS SQL Server will find the best execution plan by itself, and the trouble is fixed. However, if you do not see any performance improvement after you update the statistics of all tables, then you need to capture the execution plan from the memory(The SQL is still running/hung there, so you can easily extract the real execution plan from the memory) and compare it with the old execution plan. MS SQL Server store the old execution plan in the database. If the execution plan is changed, then you can use the old but good execution plan to apply on the current SQL. As the last resort, you should review the SQL code and rewrite it, or add some hints in the code. This is the basic idea about how to trouble shoot the SQL performance issue in the production database.\newline \newline
+\noindent 
+Q: What are the tools you use to find, identify and fix the bad performance SQL query? \newline \newline
 \noindent 
 Q: What is the difference between DELETE and TRUNCATE commands in T-SQL? \newline \newline
 \noindent 
@@ -32,7 +35,7 @@ Q: Tell me how to use MERGE statement. \newline \newline
 \noindent 
 Q: Do you know the CASE type? \newline \newline
 \noindent 
-Q: What is Cursor? \newline \newline
+Q: What is CURSOR? \newline \newline
 \noindent 
 Q: How do you check if your data is modified successfully in production? \newline \newline
 \noindent 
@@ -42,22 +45,33 @@ Q: When you design a table, what is the way to ensure that each row is unique, w
 \noindent 
 Q: How do you make DATETIME data type displaying as DATE without TIME? \newline \newline
 \noindent 
-Q: \underline{What is the size of the database you haved worked on?} \newline
+Q: \ul{What is the size of the database you haved worked on?} \newline
 A: It depends on the type of the database. We have three database types: OLTP(Online Transaction Processing) database, ODS(Operational Data Store) database, EDW(Enterprise Data Warehouse) database. OLTP: 500 GB - 3 TB; ODS: 10 TB - 60 TB; EDW: 5 TB - 30 TB. OLTP is much smaller, and the biggest one is ODS because it contains all the history raw data for many years.\newline \newline
 \noindent 
 Q: When you assign a value to a variable, what is the difference between 'SET' and 'SELECT'? \newline \newline
 \noindent 
-Q: When you have INNER JOIN with condition 'ON 1=1', what kind of expected result will you have? \newline \newline
+Q: \ul{When you have INNER JOIN with condition 'ON 1=1', what kind of expected result will you have}? \newline 
+A: It will get the result of CROSS JOIN! SELECT xxxx FROM tableA INNER JOIN tableB ON (1=1) = SELECT xxxx FROM tableA CROSS JOIN tableB. \newline \newline
+\noindent 
+Q: What is CROSS JOIN, INNER JOIN, OUTER JOIN, FULL JOIN? \newline \newline
 \noindent 
 Q: As a SQL developer, could you tell me why I need or do not need the cluster index? Just generally speaking.\newline \newline
+\noindent 
+Q: What is cluster index, and what is non-cluster index?\newline \newline
+\noindent 
+Q: What is the difference between PRIMARY KEY and UNIQUE constraint?\newline \newline
 \noindent 
 Q: What is the advantage and disadvantage of using GUID as the unique key compared with Integer type? \newline \newline
 \noindent 
 Q: What is the consideration when you design a new query to extract the data from a very large table to ensure the good performance? \newline \newline
 \noindent 
-Q: What is the syntax order of FROM, HAVING, SELECT, ORDER BY, GROUP BY, WHERE, INTO in a T-SQL SELECT statement? \newline \newline
+Q: \ul{What is the syntax order of FROM, HAVING, SELECT, ORDER BY, GROUP BY, WHERE, INTO in a T-SQL SELECT statement?} \newline
+A: SELECT $\rightarrow$ INTO $\rightarrow$ FROM $\rightarrow$ WHERE $\rightarrow$ GROUP BY $\rightarrow$ HAVING $\rightarrow$ ORDER BY. \newline \newline
 \noindent 
-Q: What is the execution order of FROM, HAVING, SELECT, ORDER BY, GROUP BY, WHERE, INTO in a T-SQL SELECT statement? \newline \newline
+Q: What is the difference between WHERE clause and HAVING clause? \newline \newline
+\noindent 
+Q: \ul{What is the execution order of FROM, HAVING, SELECT, ORDER BY, GROUP BY, WHERE in a T-SQL SELECT statement?} \newline
+A: FROM $\rightarrow$ WHERE $\rightarrow$ GROUP BY $\rightarrow$ HAVING $\rightarrow$ SELECT $\rightarrow$ ORDER BY. \newline \newline
 \noindent 
 Q: Giving you the freedom to design something from the beggining, what normal form do you typically use for the development? \newline \newline
 \noindent 
@@ -65,8 +79,8 @@ Q: What does the optimizer do to handle the INNER/LEFT JOIN condition and WHERE 
 \noindent 
 Q: What is the index view with SCHEMABINDING option in MS SQL Server? \newline \newline
 \noindent 
-Q: \underline{Please list three different ways to import data into MS SQL Server.} \newline
-A: Bulk Insert, BCP, and SSIS package.\newline\newline
+Q: \ul{Please list three different ways to import data into MS SQL Server.} \newline
+A: Bulk Insert, BCP, SQL Server Import/Export Wizard, and You can write your SSIS package to do that. You can also use some script tools such as Perl, Python to read the data text file and generate the INSERT sql script to import the data.\newline\newline
 \noindent 
 Q: What is the difference between table variable and temp table? \newline \newline
 \noindent 
@@ -80,13 +94,21 @@ Q: What is the VIEW and when should it be used? \newline \newline
 \noindent 
 Q: What is IDENTITY column? \newline \newline
 \noindent 
+Q: What is SYNONYM in Microsoft SQL Server? \newline \newline
+\noindent 
 Q: You have a requirement to extract every LASTNAME from table A that is not in table B. How to do that? \newline \newline
 \noindent 
 Q: What is Data Warehouse? Can you explain what is the difference between Kimball and Inmon data warehouse? \newline \newline
 \noindent 
-Q: What is ? \newline \newline
+Q: What is the PIVOT statement in T-SQL? \newline \newline
 \noindent 
-Q: What is ? \newline \newline
+Q: How about the OUTPUT clause in T-SQL? \newline \newline
+\noindent 
+Q: What is STAR schema? What is SNOWFLAKE schema? \newline \newline
+\noindent 
+Q: How do you handle the errors in the stored procedure? \newline \newline
+\noindent 
+Q: Tell me something about TRY...CATCH in T-SQL, and how do you use it? \newline \newline
 
 \section{SSIS}
 Q: Tell me how to load Type 2 dimension table in SSIS? \newline \newline
@@ -107,31 +129,59 @@ Q: How to get rid of the duplicate records from the millions of records from the
 \noindent 
 Q: What is the difference between synchronous transformation and asynchronous transformation in SSIS? \newline \newline
 \noindent 
-Q: What is ? \newline \newline
+Q: When you are working on SSIS packages, what type of configuration have you done to them, how can you perform the configurations? \newline \newline
 \noindent 
-Q: What is ? \newline \newline
+Q: How can you deploy the SSIS packages into production environment? \newline \newline
+\noindent 
+Q: In SSIS, what is the difference between the variables and the parameters? \newline \newline
+\noindent 
+Q: What is sequence container in SSIS. Do you know how many type of containers in SSIS package? \newline \newline
+\noindent 
+Q: We have a store procedure that is called by our ETL package. It is working slowly. How could you find what problem is, and what kind of solution you will use to fix it?\newline \newline
+\noindent 
+Q: For the control flow and data flow in SSIS package, which one can be run parallelly, which one can only be running sequencely? \newline \newline
+\noindent 
+Q: \ul{We will get one file each day from the vendor, but someday we get many files from this vendor. How to handle mulitple files in your SSIS package}? \newline 
+A: I think we should design the package using the For-Each-Loop Container. If the files are in one folder or directory, the For-Each-Loop container will automatically find these files, no matter one file or many files there. (This is a good hands-on lab, so please do it by youself).\newline\newline
+\noindent 
+Q: Are you familiar with the Data Pipeline Object in SSIS? \newline \newline
 
 \section{SSRS}
 Q: List all the ways you know to deploy a report.\newline \newline
 \noindent 
-Q: What is ? \newline \newline
-\noindent 
-Q: What is ? \newline \newline
-\noindent 
-Q: What is ? \newline \newline
-\noindent 
-Q: What is ? \newline \newline
+Q: What's the difference between DRILL-DOWN and DRILL-THROUGH? \newline \newline
+
 
 \section{SSAS}
 -- This is the SSAS question.
 
-\section{Development}
--- This is the Agile/Scrum question.
+\section{Development and Others}
+Q: \ul{What are the project management tools you are using in your team}?\newline
+A: Please google JIRA, RALLY, DAILY SCRUM MEETING, USER STORY and prepare these terms. We also use Subversion before as the source code version control tool, but now we turn to Git and Github. Please also google Subvresion, Git, Github by yourself.\newline \newline
+\noindent 
+Q: Tell me about something for Microsoft Azure. \newline \newline
 
 \section{Behavior Questions}
+Q: \ul{Tell me a little bit of your background, what you are doing in your current position}? \newline
+A: This is the first question the interviewer wants to ask you. They want to get some overall impression from your statements. You should prepare your introductoin carefully before your interview. You can listen to many good introductions from our audios. DO PLEASE prepare it in advance by yourself and write the statements down in the papaer and palce the papaer in front of you before the interview.\newline \newline
+\noindent 
+Q: In your daily jobs, what is the most important task you do? \newline \newline
+\noindent 
+Q: What is the biggest challenge in your current project? \newline \newline
+\noindent 
 Q: How do you keep up with new technology? \newline \newline
 \noindent 
 Q: What is the reason why you want to leave current position and look for new opportunity? \newline \newline
+\noindent 
+Q: \ul{Do you have any questions you want to ask from us}?\newline
+A: This is the last question the interviewer wants to ask you. This is the last opportunity that you can bring good impression to the interviewer. If you ask some high quality questions, it will be very good for your interview.
+\begin{description}
+  \item[$\bullet$ question 1:] What is your expectation from me if I can get this offer?
+  \item[$\bullet$ question 2:] What is biggest challenge in your team? What is the biggest pressure your team is facing?
+  \item[$\bullet$ question 3:] How many developers in your team? Do you have DBA in your team?
+  \item[$\bullet$ question 4:] What is the size of your biggest database?
+\end{description}
+
 \noindent 
 Q: What is ? \newline \newline
 

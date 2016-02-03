@@ -5,23 +5,37 @@
 
 \documentclass[a4paper,11pt]{article}
 \usepackage{soul}
+\usepackage{url}
 \begin{document}
 \title{Microsoft SQL Server Developer Interview Questions}
-\author{postgresql2016(at)gmail.com}
-\date{January 27, 2016}
+\author{\url{postgresql2016@gmail.com}}
+\date{Feburary 1, 2016}
 \maketitle
 The following interview questoins are all from the REAL interviews(including both telephone and on-site interviews). Hope this document is helpful during your job hunting process. Enjoy!
 \section{MS SQL Server and T-SQL}
-Q: \ul{If the SQL performance is bad, tell me how you can fix it?} \newline
+Q: \ul{If the SQL performance is bad, tell me how you can fix it}? \newline
 A: This is a typical and difficult question. Usually the SQL in the production database meets some performance trouble. The quickest way is to check the statistics of the related tables(You can find the table list from the SQL code), and update the statistics very quickly. If the statistics are updated, in most case, MS SQL Server will find the best execution plan by itself, and the trouble is fixed. However, if you do not see any performance improvement after you update the statistics of all tables, then you need to capture the execution plan from the memory(The SQL is still running/hung there, so you can easily extract the real execution plan from the memory) and compare it with the old execution plan. MS SQL Server store the old execution plan in the database. If the execution plan is changed, then you can use the old but good execution plan to apply on the current SQL. As the last resort, you should review the SQL code and rewrite it, or add some hints in the code. This is the basic idea about how to trouble shoot the SQL performance issue in the production database.\newline \newline
 \noindent 
 Q: What are the tools you use to find, identify and fix the bad performance SQL query? \newline \newline
 \noindent 
-Q: What is the difference between DELETE and TRUNCATE commands in T-SQL? \newline \newline
+Q: Could you share with us some of your exeperience about performance tunning SQL code and SSIS package? \newline \newline
 \noindent 
+Q: \ul{What is the difference between DELETE and TRUNCATE commands in T-SQL}? \newline 
+A: Please see below:
+\begin{description}
+  \item[$\bullet$] DELETE statement removes rows one at a time and records an entry in the transaction log for each deleted row. TRUNCATE operation removes the data by deallocating the data pages used to store the table’s data and only the page deallocations are recorded in the transaction log. (The deallocation of data pages means that your data rows still actually exist in the data pages, but the extents have been marked as empty for reuse.)?
+  \item[$\bullet$] TRUNCATE  is a faster operation to perform over DELETE
+  \item[$\bullet$] TRUNCATE will reset any identity columns to the default seed value in its identity columns. DELETE will not do this.
+  \item[$\bullet$] TRUNCATE TABLE removes all rows from a table, but the table structure and its columns, constraints, indexes and so on remain. 
+  \item[$\bullet$] Cannot use TRUNCATE TABLE on a table referenced by a FOREIGN KEY constraint; Participate in an indexed view, published by using transactional replication or merge replication. 
+  \item[$\bullet$] TRUNCATE TABLE cannot activate a trigger. 
+\end{description}
+\noindent 
+\newline
 Q: What is CTE? What is CTE can do but normal T-SQL cannot do?\newline \newline
 \noindent 
-Q: I can DROP PROCEDURE and CREATE PROCEDURE, and I can also ALTER PROCEDURE. What is the difference? \newline \newline
+Q: \ul{I can DROP PROCEDURE and CREATE PROCEDURE, and I can also ALTER PROCEDURE. What is the difference}? \newline 
+A: ALTER PROCEDURE retains any permissions that have been established for this stored procedure. It keeps the same object ID with system objects and allows the dependenceies to be kept. If you perform a DROP and then use a CREATE, you have almost the same effect as using an ALTER PROC statement with one rather big difference — if you DROP and CREATE, you will need to entirely reestablish your permissions on who can and can’t use this stored procedure.\newline\newline
 \noindent 
 Q: How do you know acceptable transaction size? \newline \newline
 \noindent 
@@ -39,19 +53,27 @@ Q: What is CURSOR? \newline \newline
 \noindent 
 Q: How do you check if your data is modified successfully in production? \newline \newline
 \noindent 
-Q: What is the difference between index seek and index scan? \newline \newline
+Q: What is the difference between INDEX SEEK and INDEX SCAN? \newline \newline
 \noindent 
 Q: When you design a table, what is the way to ensure that each row is unique, what way do you accomplish this? \newline \newline
 \noindent 
 Q: How do you make DATETIME data type displaying as DATE without TIME? \newline \newline
 \noindent 
-Q: \ul{What is the size of the database you haved worked on?} \newline
+Q: \ul{What is the size of the database you haved worked on}? \newline
 A: It depends on the type of the database. We have three database types: OLTP(Online Transaction Processing) database, ODS(Operational Data Store) database, EDW(Enterprise Data Warehouse) database. OLTP: 500 GB - 3 TB; ODS: 10 TB - 60 TB; EDW: 5 TB - 30 TB. OLTP is much smaller, and the biggest one is ODS because it contains all the history raw data for many years.\newline \newline
+\noindent 
+Q: What is ODS and what is EDW. In ODS, what kind of data are you storing? How large is the ODS store in your current job?\newline \newline
+\noindent 
+Q: What is the challenge when getting the data from your ODS to the Data Warehouse?\newline \newline
+\noindent 
+Q: What is the typical data load window from your ODS to the EDW? What is the data loading volumne?\newline \newline
+\noindent 
+Q: Are you part of the Data Warehouse design? What is the challenge during the data warehouse design?\newline \newline
 \noindent 
 Q: When you assign a value to a variable, what is the difference between 'SET' and 'SELECT'? \newline \newline
 \noindent 
 Q: \ul{When you have INNER JOIN with condition 'ON 1=1', what kind of expected result will you have}? \newline 
-A: It will get the result of CROSS JOIN! SELECT xxxx FROM tableA INNER JOIN tableB ON (1=1) = SELECT xxxx FROM tableA CROSS JOIN tableB. \newline \newline
+A: It will get the result of CROSS JOIN! 'SELECT xxxx FROM tableA INNER JOIN tableB ON (1=1)' is the same thing as 'SELECT xxxx FROM tableA CROSS JOIN tableB'. \newline \newline
 \noindent 
 Q: What is CROSS JOIN, INNER JOIN, OUTER JOIN, FULL JOIN? \newline \newline
 \noindent 
@@ -59,7 +81,8 @@ Q: As a SQL developer, could you tell me why I need or do not need the cluster i
 \noindent 
 Q: What is cluster index, and what is non-cluster index?\newline \newline
 \noindent 
-Q: What is the difference between PRIMARY KEY and UNIQUE constraint?\newline \newline
+Q: \ul{What is the difference between PRIMARY KEY and UNIQUE constraint}?\newline
+A: Primary key doesn't allow NULLs, but unique key allows one NULL only. Primary key creates a clustered index on the column by default, unique index creates a nonclustered index by default. Of course you can create nonclustered primary key and clustered unique index.\newline\newline
 \noindent 
 Q: What is the advantage and disadvantage of using GUID as the unique key compared with Integer type? \newline \newline
 \noindent 
@@ -73,14 +96,14 @@ Q: What is the difference between WHERE clause and HAVING clause? \newline \newl
 Q: \ul{What is the execution order of FROM, HAVING, SELECT, ORDER BY, GROUP BY, WHERE in a T-SQL SELECT statement?} \newline
 A: FROM $\rightarrow$ WHERE $\rightarrow$ GROUP BY $\rightarrow$ HAVING $\rightarrow$ SELECT $\rightarrow$ ORDER BY. \newline \newline
 \noindent 
-Q: Giving you the freedom to design something from the beggining, what normal form do you typically use for the development? \newline \newline
+Q: Giving you the freedom to design something from the beginning, what normal form do you typically use for the development? \newline \newline
 \noindent 
 Q: What does the optimizer do to handle the INNER/LEFT JOIN condition and WHERE clause? \newline \newline
 \noindent 
 Q: What is the index view with SCHEMABINDING option in MS SQL Server? \newline \newline
 \noindent 
 Q: \ul{Please list three different ways to import data into MS SQL Server.} \newline
-A: Bulk Insert, BCP, SQL Server Import/Export Wizard, and You can write your SSIS package to do that. You can also use some script tools such as Perl, Python to read the data text file and generate the INSERT sql script to import the data.\newline\newline
+A: Bulk Insert, BCP, SQL Server Import/Export Wizard, and you can write the SSIS package to do that. You can also use some script tools such as Perl, Python to read the data text file and generate the INSERT sql script to import the data.\newline\newline
 \noindent 
 Q: What is the difference between table variable and temp table? \newline \newline
 \noindent 
@@ -109,9 +132,17 @@ Q: What is STAR schema? What is SNOWFLAKE schema? \newline \newline
 Q: How do you handle the errors in the stored procedure? \newline \newline
 \noindent 
 Q: Tell me something about TRY...CATCH in T-SQL, and how do you use it? \newline \newline
+\noindent 
+Q: What is partition table? \newline \newline
+\noindent 
+Q: What is the difference between data mart and data store? \newline \newline
 
 \section{SSIS}
 Q: Tell me how to load Type 2 dimension table in SSIS? \newline \newline
+\noindent 
+Q: How would you say managing changing dimension in your data warehouse? Slowly changing dimesion is only one of the managing changing dimension.\newline \newline
+\noindent 
+Q: What is the difference between Type 1 and Type 2 SCD? \newline \newline
 \noindent 
 Q: What is the difference between Script Component and Script Task? \newline \newline
 \noindent 
@@ -145,6 +176,10 @@ Q: \ul{We will get one file each day from the vendor, but someday we get many fi
 A: I think we should design the package using the For-Each-Loop Container. If the files are in one folder or directory, the For-Each-Loop container will automatically find these files, no matter one file or many files there. (This is a good hands-on lab, so please do it by youself).\newline\newline
 \noindent 
 Q: Are you familiar with the Data Pipeline Object in SSIS? \newline \newline
+\noindent 
+Q: What else ETL tools do you beside SSIS? \newline \newline
+\noindent 
+Q: What kind of tools either than MS BI stack, in package design, data schema design, code do you use in your team? \newline \newline
 
 \section{SSRS}
 Q: List all the ways you know to deploy a report.\newline \newline
@@ -160,6 +195,10 @@ Q: \ul{What are the project management tools you are using in your team}?\newlin
 A: Please google JIRA, RALLY, DAILY SCRUM MEETING, USER STORY and prepare these terms. We also use Subversion before as the source code version control tool, but now we turn to Git and Github. Please also google Subvresion, Git, Github by yourself.\newline \newline
 \noindent 
 Q: Tell me about something for Microsoft Azure. \newline \newline
+\noindent 
+Q: What is the relationship between class and object in C\#? \newline \newline
+\noindent 
+Q: Do you have any experience with Oracle database? \newline \newline
 
 \section{Behavior Questions}
 Q: \ul{Tell me a little bit of your background, what you are doing in your current position}? \newline
@@ -170,6 +209,13 @@ Q: In your daily jobs, what is the most important task you do? \newline \newline
 Q: What is the biggest challenge in your current project? \newline \newline
 \noindent 
 Q: How do you keep up with new technology? \newline \newline
+\noindent 
+Q: From the career path perspective, what are you looking to do and how soon are you going to do it? \newline \newline
+\noindent 
+Q: \ul{For the team member working with you and the manager, how would they describe you}? \newline 
+A: high technical skills plus easy going personality. \newline\newline
+\noindent 
+Q: What is the most challenge things, and what are you struggling with? \newline \newline
 \noindent 
 Q: What is the reason why you want to leave current position and look for new opportunity? \newline \newline
 \noindent 
@@ -183,7 +229,6 @@ A: This is the last question the interviewer wants to ask you. This is the last 
 \end{description}
 
 \noindent 
-Q: What is ? \newline \newline
-
+--- THE END --- 
 
 \end{document}

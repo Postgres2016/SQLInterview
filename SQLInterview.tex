@@ -9,10 +9,73 @@
 \begin{document}
 \title{Microsoft SQL Server Developer Interview Questions}
 \author{\url{postgresql2016@gmail.com}}
-\date{Feburary 1, 2016}
+\date{March 1, 2016}
 \maketitle
 The following interview questoins are all from the REAL interviews(including both telephone and on-site interviews). Hope this document is helpful during your job hunting process. Enjoy!
 \section{MS SQL Server and T-SQL}
+Q: What is the VIEW and when should it be used? Can we INSERT/DELETE/UPDATE the data in the view?\newline \newline
+\noindent 
+Q: What is the difference between VIEW and TABLE? \newline \newline
+\noindent 
+Q: What is the SCHEMABINDING? \newline \newline
+\noindent 
+Q: What is the index view with SCHEMABINDING option in MS SQL Server? \newline \newline
+\noindent 
+Q: What is IDENTITY column? \newline \newline
+\noindent 
+Q: What is CTE? What is CTE can do but normal T-SQL cannot do?\newline \newline
+\noindent 
+Q: What is SYNONYM in Microsoft SQL Server? \newline \newline
+\noindent 
+Q: What is the PIVOT statement in T-SQL? \newline \newline
+\noindent 
+Q: How about the OUTPUT clause in T-SQL? \newline \newline
+\noindent 
+Q: Tell me how to use MERGE statement. \newline \newline
+\noindent 
+Q: Do you know the CASE type? \newline \newline
+\noindent 
+Q: List some build-in functions you know in Microsoft SQL Server and T-SQL. \newline \newline
+\noindent 
+Q: What is CURSOR? \newline \newline
+\noindent 
+Q: How do you make DATETIME data type displaying as DATE without TIME? \newline \newline
+\noindent 
+Q: What is the difference between the INNER JOIN and LEFT OUTER JOIN? \newline \newline
+\noindent 
+Q: What is CROSS JOIN, INNER JOIN, OUTER JOIN, FULL JOIN? \newline \newline
+\noindent 
+Q: Tell me the different types of Index in Microsoft SQL Server.\newline \newline
+\noindent 
+Q: What is cluster index, and what is non-cluster index?\newline \newline
+\noindent 
+Q: As a SQL developer, could you tell me why I need or do not need the cluster index? Just generally speaking.\newline \newline
+\noindent 
+Q: \ul{What is the difference between PRIMARY KEY and UNIQUE constraint}?\newline
+A: Primary key doesn't allow NULLs, but unique key allows one NULL only. Primary key creates a clustered index on the column by default, unique index creates a nonclustered index by default. Of course you can create nonclustered primary key and clustered unique index.\newline\newline
+\noindent 
+Q: What is the advantage and disadvantage of using GUID as the unique key compared with Integer type? \newline \newline
+\noindent 
+Q: What is the difference between the stored procedure and user defined function? \newline \newline
+\noindent 
+Q: Please write a query to check the duplicate rows in one table. \newline \newline
+\noindent 
+Q: How to deduplicate data in Microsoft SQL Server and T-SQL? \newline \newline
+\noindent 
+Q: What is index fragmentation? \newline \newline
+\noindent 
+Q: What is the difference between INDEX SEEK and INDEX SCAN? \newline \newline
+\noindent 
+Q: What is database snapshot? \newline \newline
+\noindent 
+Q: What is page split in Microsoft SQL Server? \newline \newline
+\noindent 
+Q: What is Parameter Sniffing in SQL Server? \newline \newline
+\noindent 
+Q: What is Contained Database in SQL Server? \newline \newline
+\noindent 
+Q: We have a table with more than 100 million rows, I want to delete 80 million rows from this table. How to delete? \newline \newline
+\noindent 
 Q: \ul{If the SQL performance is bad, tell me how you can fix it}? \newline
 A: This is a typical and difficult question. Usually the SQL in the production database meets some performance trouble. The quickest way is to check the statistics of the related tables(You can find the table list from the SQL code), and update the statistics very quickly. If the statistics are updated, in most case, MS SQL Server will find the best execution plan by itself, and the trouble is fixed. However, if you do not see any performance improvement after you update the statistics of all tables, then you need to capture the execution plan from the memory(The SQL is still running/hung there, so you can easily extract the real execution plan from the memory) and compare it with the old execution plan. MS SQL Server store the old execution plan in the database. If the execution plan is changed, then you can use the old but good execution plan to apply on the current SQL. As the last resort, you should review the SQL code and rewrite it, or add some hints in the code. This is the basic idea about how to trouble shoot the SQL performance issue in the production database.\newline \newline
 \noindent 
@@ -32,8 +95,6 @@ A: Please see below:
 \end{description}
 \noindent 
 \newline
-Q: What is CTE? What is CTE can do but normal T-SQL cannot do?\newline \newline
-\noindent 
 Q: \ul{I can DROP PROCEDURE and CREATE PROCEDURE, and I can also ALTER PROCEDURE. What is the difference}? \newline 
 A: ALTER PROCEDURE retains any permissions that have been established for this stored procedure. It keeps the same object ID with system objects and allows the dependenceies to be kept. If you perform a DROP and then use a CREATE, you have almost the same effect as using an ALTER PROC statement with one rather big difference — if you DROP and CREATE, you will need to entirely reestablish your permissions on who can and can’t use this stored procedure.\newline\newline
 \noindent 
@@ -45,19 +106,9 @@ Q: Please select all tables name containing column called 'somename'. \newline \
 \noindent 
 Q: Please list the table with more than 2 dependencies \newline \newline
 \noindent 
-Q: Tell me how to use MERGE statement. \newline \newline
-\noindent 
-Q: Do you know the CASE type? \newline \newline
-\noindent 
-Q: What is CURSOR? \newline \newline
-\noindent 
 Q: How do you check if your data is modified successfully in production? \newline \newline
 \noindent 
-Q: What is the difference between INDEX SEEK and INDEX SCAN? \newline \newline
-\noindent 
 Q: When you design a table, what is the way to ensure that each row is unique, what way do you accomplish this? \newline \newline
-\noindent 
-Q: How do you make DATETIME data type displaying as DATE without TIME? \newline \newline
 \noindent 
 Q: \ul{What is the size of the database you haved worked on}? \newline
 A: It depends on the type of the database. We have three database types: OLTP(Online Transaction Processing) database, ODS(Operational Data Store) database, EDW(Enterprise Data Warehouse) database. OLTP: 500 GB - 3 TB; ODS: 10 TB - 60 TB; EDW: 5 TB - 30 TB. OLTP is much smaller, and the biggest one is ODS because it contains all the history raw data for many years.\newline \newline
@@ -66,7 +117,7 @@ Q: What is ODS and what is EDW. In ODS, what kind of data are you storing? How l
 \noindent 
 Q: What is the challenge when getting the data from your ODS to the Data Warehouse?\newline \newline
 \noindent 
-Q: What is the typical data load window from your ODS to the EDW? What is the data loading volumne?\newline \newline
+Q: What is the typical data load window from your ODS to the EDW? What is the data loading volume?\newline \newline
 \noindent 
 Q: Are you part of the Data Warehouse design? What is the challenge during the data warehouse design?\newline \newline
 \noindent 
@@ -74,17 +125,6 @@ Q: When you assign a value to a variable, what is the difference between 'SET' a
 \noindent 
 Q: \ul{When you have INNER JOIN with condition 'ON 1=1', what kind of expected result will you have}? \newline 
 A: It will get the result of CROSS JOIN! 'SELECT xxxx FROM tableA INNER JOIN tableB ON (1=1)' is the same thing as 'SELECT xxxx FROM tableA CROSS JOIN tableB'. \newline \newline
-\noindent 
-Q: What is CROSS JOIN, INNER JOIN, OUTER JOIN, FULL JOIN? \newline \newline
-\noindent 
-Q: As a SQL developer, could you tell me why I need or do not need the cluster index? Just generally speaking.\newline \newline
-\noindent 
-Q: What is cluster index, and what is non-cluster index?\newline \newline
-\noindent 
-Q: \ul{What is the difference between PRIMARY KEY and UNIQUE constraint}?\newline
-A: Primary key doesn't allow NULLs, but unique key allows one NULL only. Primary key creates a clustered index on the column by default, unique index creates a nonclustered index by default. Of course you can create nonclustered primary key and clustered unique index.\newline\newline
-\noindent 
-Q: What is the advantage and disadvantage of using GUID as the unique key compared with Integer type? \newline \newline
 \noindent 
 Q: What is the consideration when you design a new query to extract the data from a very large table to ensure the good performance? \newline \newline
 \noindent 
@@ -100,8 +140,6 @@ Q: Giving you the freedom to design something from the beginning, what normal fo
 \noindent 
 Q: What does the optimizer do to handle the INNER/LEFT JOIN condition and WHERE clause? \newline \newline
 \noindent 
-Q: What is the index view with SCHEMABINDING option in MS SQL Server? \newline \newline
-\noindent 
 Q: \ul{Please list three different ways to import data into MS SQL Server.} \newline
 A: Bulk Insert, BCP, SQL Server Import/Export Wizard, and you can write the SSIS package to do that. You can also use some script tools such as Perl, Python to read the data text file and generate the INSERT sql script to import the data.\newline\newline
 \noindent 
@@ -113,21 +151,9 @@ Q: What is the set option to suppress the row count output of one SQL session? \
 \noindent 
 Q: What is the difference between row compression and page compression? \newline \newline
 \noindent 
-Q: What is the VIEW and when should it be used? \newline \newline
-\noindent 
-Q: What is IDENTITY column? \newline \newline
-\noindent 
-Q: What is SYNONYM in Microsoft SQL Server? \newline \newline
-\noindent 
 Q: You have a requirement to extract every LASTNAME from table A that is not in table B. How to do that? \newline \newline
 \noindent 
 Q: What is Data Warehouse? Can you explain what is the difference between Kimball and Inmon data warehouse? \newline \newline
-\noindent 
-Q: What is the PIVOT statement in T-SQL? \newline \newline
-\noindent 
-Q: How about the OUTPUT clause in T-SQL? \newline \newline
-\noindent 
-Q: What is STAR schema? What is SNOWFLAKE schema? \newline \newline
 \noindent 
 Q: How do you handle the errors in the stored procedure? \newline \newline
 \noindent 
@@ -135,9 +161,17 @@ Q: Tell me something about TRY...CATCH in T-SQL, and how do you use it? \newline
 \noindent 
 Q: What is partition table? \newline \newline
 \noindent 
+Q: What is the difference between DIMENSION table and FACT table? \newline \newline
+\noindent 
+Q: What is STAR schema? What is SNOWFLAKE schema? \newline \newline
+\noindent 
 Q: What is the difference between data mart and data store? \newline \newline
+\noindent 
+Q: Tell me some new features of SQL Server 2014, SQL Server 2016? \newline \newline
 
 \section{SSIS}
+Q: What is Event Handler in SSIS package? \newline \newline
+\noindent 
 Q: Tell me how to load Type 2 dimension table in SSIS? \newline \newline
 \noindent 
 Q: How would you say managing changing dimension in your data warehouse? Slowly changing dimesion is only one of the managing changing dimension.\newline \newline
@@ -145,6 +179,8 @@ Q: How would you say managing changing dimension in your data warehouse? Slowly 
 Q: What is the difference between Type 1 and Type 2 SCD? \newline \newline
 \noindent 
 Q: What is the difference between Script Component and Script Task? \newline \newline
+\noindent 
+Q: How to configure and use the SSIS logging? \newline \newline
 \noindent 
 Q: What is advantage and disadvantage of C\# and T-SQL? \newline \newline
 \noindent 
